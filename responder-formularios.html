@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formularios — Bienestar Emocional</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rp:#FFE5F0;--ri:#FF85C0;--mp:#E8D5FF;--mi:#A67FFF;
+  --card:#fff;--bg:#f5f2ff;--border:#ede8ff;
+  --mid:#5A5570;--text:#2D2A3D;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── Topbar ─────────────────────────────────── */
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:.8rem 1.4rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(166,127,255,.08);}
+.tb-l{display:flex;align-items:center;gap:.7rem;}
+.tb-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--ri),var(--mi));display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.tb-brand{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;}
+.tb-brand span{color:var(--mi);}
+
+/* ── Main ───────────────────────────────────── */
+.main{max-width:1100px;margin:0 auto;padding:1.5rem 1.2rem 3rem;}
+
+/* ── Filtros ────────────────────────────────── */
+.filtros-panel{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;display:flex;flex-wrap:wrap;gap:.9rem;align-items:flex-end;}
+.fg{display:flex;flex-direction:column;gap:.3rem;}
+.fg label{font-size:.68rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.08em;}
+input[type=date],input[type=time],input[type=text],input[type=tel],input[type=email],select,textarea{
+  padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:10px;
+  font-family:'Manrope',sans-serif;font-size:.88rem;color:var(--text);
+  background:#fafafa;outline:none;transition:all .2s;width:100%;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--mi);background:#fff;box-shadow:0 0 0 3px rgba(166,127,255,.1);}
+textarea{min-height:70px;resize:vertical;line-height:1.6;}
+
+/* ── Botones ────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1.2rem;border-radius:50px;font-family:'Manrope',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;white-space:nowrap;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--ri),var(--mi));color:#fff;box-shadow:0 4px 14px rgba(166,127,255,.35);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:transparent;color:var(--mid);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--mi);color:var(--mi);}
+.btn-wa{background:#25D366;color:#fff;}
+.btn-wa:hover{background:#1da851;}
+.btn-sms{background:#3b82f6;color:#fff;}
+.btn-sms:hover{background:#2563eb;}
+.btn-mail{background:linear-gradient(135deg,var(--ri),var(--mi));color:#fff;}
+.btn-danger{background:#fef2f2;color:var(--err);border:1.5px solid #fecaca;}
+.btn-sm{padding:.4rem .9rem;font-size:.78rem;}
+.btn-link{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;}
+
+/* ── Stats ──────────────────────────────────── */
+.stats-bar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.1rem;}
+.stat-chip{background:var(--card);border:1.5px solid var(--border);border-radius:50px;padding:.32rem .9rem;font-size:.76rem;font-weight:600;color:var(--mid);}
+.stat-chip b{color:var(--text);}
+.stat-chip.hi{border-color:var(--mi);color:var(--mi);}
+.stat-chip.hi b{color:var(--mi);}
+
+/* ── Skeleton ───────────────────────────────── */
+.skel{background:linear-gradient(90deg,var(--border) 25%,var(--mp) 50%,var(--border) 75%);background-size:200% 100%;animation:sk 1.5s infinite;border-radius:16px;height:120px;margin-bottom:.8rem;}
+@keyframes sk{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* ── Tabla ──────────────────────────────────── */
+.table-wrap{background:var(--card);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.table-head-bar{padding:.85rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.table-head-bar h2{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;}
+.tscroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:linear-gradient(135deg,rgba(232,213,255,.3),rgba(255,229,240,.15));}
+th{text-align:left;padding:.7rem .9rem;font-size:.67rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:.72rem .9rem;font-size:.81rem;border-bottom:1px solid rgba(237,232,255,.5);vertical-align:middle;line-height:1.5;}
+tr:last-child td{border-bottom:none;}
+tbody tr{cursor:pointer;transition:background .15s;}
+tbody tr:hover td{background:rgba(245,242,255,.6);}
+tbody tr.activa td{background:linear-gradient(135deg,rgba(232,213,255,.2),rgba(255,229,240,.15));border-left:3px solid var(--mi);}
+.tbadge{display:inline-flex;align-items:center;padding:.13rem .55rem;border-radius:50px;font-size:.65rem;font-weight:700;white-space:nowrap;}
+.t-cita{background:#fdf4ff;color:#9333ea;}
+.t-empresa{background:#eff6ff;color:#2563eb;}
+.t-escuela{background:#f0fdf4;color:#16a34a;}
+.s-pendiente{background:#fff7ed;color:#ea580c;}
+.s-espera{background:#eff6ff;color:#2563eb;}
+.s-atendido{background:#f0fdf4;color:#16a34a;}
+.s-cancelado{background:#fef2f2;color:#dc2626;}
+.motivo-txt{max-width:200px;font-size:.74rem;color:var(--mid);line-height:1.4;}
+.empty-cell{text-align:center;padding:3.5rem 1rem;color:var(--mid);font-size:.85rem;}
+.hint-row{font-size:.7rem;color:var(--mi);text-align:center;padding:.5rem;border-top:1px solid var(--border);}
+
+/* ── Panel de detalle (derecha o abajo) ─────── */
+.layout{display:grid;grid-template-columns:1fr;gap:1.2rem;}
+@media(min-width:900px){
+  .layout{grid-template-columns:1fr 420px;align-items:start;}
+}
+.detalle-panel{
+  background:var(--card);border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;position:sticky;top:70px;
+  display:none;
+}
+.detalle-panel.show{display:block;}
+.detalle-head{
+  padding:1rem 1.2rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(232,213,255,.2),rgba(255,229,240,.1));
+  display:flex;align-items:center;justify-content:space-between;
+}
+.detalle-head-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;}
+.detalle-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--mid);padding:.2rem;}
+.detalle-body{padding:1rem 1.2rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;overflow-y:auto;max-height:80vh;}
+
+/* ── Sección info del formulario ────────────── */
+.info-section{background:var(--bg);border-radius:12px;padding:.85rem 1rem;}
+.info-row{display:flex;gap:.4rem .8rem;flex-wrap:wrap;font-size:.8rem;color:var(--mid);margin-bottom:.3rem;}
+.info-row strong{color:var(--text);}
+.info-nombre{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.35rem;}
+.info-motivo{font-size:.78rem;color:var(--mid);line-height:1.55;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);}
+.extra-toggle{font-size:.7rem;font-weight:700;color:var(--mi);background:none;border:none;cursor:pointer;margin-top:.4rem;padding:0;font-family:'Manrope',sans-serif;}
+.extra-box{display:none;margin-top:.5rem;background:#fff;border-radius:8px;padding:.6rem .8rem;font-size:.74rem;color:var(--mid);line-height:1.9;}
+.extra-box.open{display:block;}
+
+/* ── Divider ────────────────────────────────── */
+.divider{display:flex;align-items:center;gap:.5rem;}
+.divider span{font-size:.62rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── Formulario de agenda ───────────────────── */
+.agenda-form{display:flex;flex-direction:column;gap:.7rem;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+
+/* ── Opciones de notificación ───────────────── */
+.notif-section{background:var(--bg);border-radius:12px;padding:.85rem 1rem;}
+.notif-title{font-size:.65rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.6rem;}
+.notif-btns{display:flex;flex-direction:column;gap:.45rem;}
+.notif-btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;}
+
+/* ── Link de confirmación ───────────────────── */
+.link-box{background:linear-gradient(135deg,rgba(124,58,237,.07),rgba(168,85,247,.05));border:1.5px solid rgba(124,58,237,.2);border-radius:12px;padding:.85rem 1rem;}
+.link-box-title{font-size:.65rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.5rem;}
+.link-url{font-size:.72rem;word-break:break-all;color:var(--mid);background:#fff;border-radius:8px;padding:.5rem .7rem;border:1px solid var(--border);margin-bottom:.5rem;line-height:1.5;}
+.link-actions{display:flex;gap:.4rem;flex-wrap:wrap;}
+
+/* ── Spinner ────────────────────────────────── */
+.spin{display:inline-block;width:13px;height:13px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+/* ── Toasts ─────────────────────────────────── */
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.5rem;z-index:9999;pointer-events:none;max-width:320px;}
+.toast{background:#1e1b2e;color:#fff;padding:.8rem 1.2rem;border-radius:12px;font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:.5rem;box-shadow:0 8px 28px rgba(0,0,0,.3);animation:tin .3s ease;}
+@keyframes tin{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:none;}}
+
+/* ── Print ──────────────────────────────────── */
+@media print{
+  .topbar,.filtros-panel,.stats-bar,.no-print,.toasts,.detalle-panel,.hint-row{display:none!important;}
+  body{background:#fff;}
+  .main{padding:0;max-width:100%;}
+  .layout{display:block;}
+  .table-wrap{border:1pt solid #ccc;border-radius:0;}
+  .print-header{display:block!important;}
+  thead tr{background:#f0e8ff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .tbadge{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  tr{page-break-inside:avoid;}
+}
+.print-header{display:none;padding:.4cm 0 .35cm;border-bottom:2pt solid #A67FFF;margin-bottom:.35cm;}
+.print-header h1{font-family:'Syne',sans-serif;font-size:13pt;color:#2D2A3D;}
+.print-header p{font-size:8pt;color:#5A5570;margin-top:3pt;}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo">📋</div>
+    <div class="tb-brand">Formularios <span>pendientes</span></div>
+  </div>
+  <div style="display:flex;gap:.5rem;" class="no-print">
+    <button class="btn btn-ghost btn-sm" onclick="cargar()">↺ Recargar</button>
+    <button class="btn btn-primary btn-sm" onclick="imprimirPDF()">🖨️ PDF</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Filtros -->
+  <div class="filtros-panel no-print">
+    <div class="fg">
+      <label>Fecha desde</label>
+      <input type="date" id="f-desde">
+    </div>
+    <div class="fg">
+      <label>Fecha hasta</label>
+      <input type="date" id="f-hasta">
+    </div>
+    <div class="fg">
+      <label>Tipo de servicio</label>
+      <select id="f-tipo">
+        <option value="todos">Todos los tipos</option>
+        <option value="cita">🟣 Citas personales</option>
+        <option value="empresa">🔵 Empresas</option>
+        <option value="escuela">🟢 Escuelas</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:flex-end;margin-left:auto;">
+      <button class="btn btn-ghost btn-sm" onclick="limpiar()">✕ Limpiar</button>
+      <button class="btn btn-primary btn-sm" onclick="aplicar()">🔍 Filtrar</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar no-print" id="stats" style="display:none;">
+    <div class="stat-chip hi">Total: <b id="s-tot">0</b></div>
+    <div class="stat-chip">🟣 Citas: <b id="s-cita">0</b></div>
+    <div class="stat-chip">🔵 Empresas: <b id="s-emp">0</b></div>
+    <div class="stat-chip">🟢 Escuelas: <b id="s-esc">0</b></div>
+  </div>
+
+  <!-- Skeleton -->
+  <div id="loading"><div class="skel"></div><div class="skel"></div></div>
+
+  <!-- Layout tabla + panel detalle -->
+  <div class="layout" id="layout" style="display:none;">
+
+    <!-- Tabla -->
+    <div class="table-wrap">
+      <div class="print-header">
+        <h1>📋 Formularios — Bienestar Emocional</h1>
+        <p id="ph-txt"></p>
+      </div>
+      <div class="table-head-bar">
+        <div>
+          <h2>📋 Listado de formularios</h2>
+          <small id="sub-txt" style="color:var(--mid);"></small>
+        </div>
+        <small id="count-txt" style="color:var(--mid);font-weight:600;"></small>
+      </div>
+      <div class="tscroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Entidad</th>
+              <th>Servicio</th>
+              <th>Estado</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="hint-row no-print">👆 Haz clic en cualquier fila para ver el detalle y agendar respuesta</div>
+    </div>
+
+    <!-- Panel detalle -->
+    <div class="detalle-panel no-print" id="detalle-panel">
+      <div class="detalle-head">
+        <div class="detalle-head-title" id="d-title">📋 Detalle</div>
+        <button class="detalle-close" onclick="cerrarDetalle()">✕</button>
+      </div>
+      <div class="detalle-body">
+
+        <!-- Info del formulario -->
+        <div class="info-section">
+          <div class="info-nombre" id="d-nombre">—</div>
+          <div class="info-row">
+            <span>📱 <strong id="d-tel">—</strong></span>
+            <span>📧 <span id="d-correo">—</span></span>
+          </div>
+          <div class="info-row" id="d-entidad-row" style="display:none;">
+            <span>🏢 <strong id="d-entidad">—</strong></span>
+          </div>
+          <div class="info-row">
+            <span id="d-tipo-badge"></span>
+            <span id="d-servicio-txt" style="font-size:.78rem;color:var(--mid);"></span>
+          </div>
+          <div class="info-motivo" id="d-motivo-wrap" style="display:none;">
+            📝 <span id="d-motivo"></span>
+          </div>
+          <button class="extra-toggle" id="d-extra-btn" style="display:none;" onclick="toggleExtra()">+ Ver todos los campos</button>
+          <div class="extra-box" id="d-extra-box"></div>
+        </div>
+
+        <div class="divider"><span>Agendar respuesta</span></div>
+
+        <!-- Formulario fecha/hora -->
+        <div class="agenda-form">
+          <div class="g2">
+            <div class="fg">
+              <label>Fecha de cita</label>
+              <input type="date" id="ag-fecha">
+            </div>
+            <div class="fg">
+              <label>Hora inicio</label>
+              <input type="time" id="ag-hora-ini" value="09:00">
+            </div>
+          </div>
+          <div class="fg">
+            <label>Hora fin <small style="text-transform:none;font-weight:400;color:var(--mid);">(opcional)</small></label>
+            <input type="time" id="ag-hora-fin">
+          </div>
+          <div class="fg">
+            <label>Estado a registrar</label>
+            <select id="ag-estado">
+              <option value="En espera">🔵 En espera — cita tentativa agendada</option>
+              <option value="Atendido">✅ Atendido — completado</option>
+              <option value="Cancelado">❌ Cancelado</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Mensaje personalizado <small style="text-transform:none;font-weight:400;color:var(--mid);">(opcional)</small></label>
+            <textarea id="ag-msg" rows="3" placeholder="Mensaje adicional para el solicitante…"></textarea>
+          </div>
+        </div>
+
+        <div class="divider"><span>Enviar notificación</span></div>
+
+        <!-- Botones de notificación -->
+        <div class="notif-section">
+          <div class="notif-title">📤 Selecciona cómo notificar</div>
+          <div class="notif-btn-row">
+            <button class="btn btn-mail btn-sm" id="btn-correo" onclick="enviarCorreo()">✉️ Correo</button>
+            <button class="btn btn-wa btn-sm" id="btn-wa" onclick="enviarWA()">💬 WhatsApp</button>
+            <button class="btn btn-sms btn-sm" id="btn-sms" onclick="enviarSMS()">📱 SMS</button>
+          </div>
+          <div style="margin-top:.55rem;">
+            <button class="btn btn-primary btn-sm" style="width:100%;" id="btn-guardar" onclick="guardarYNotificar()">
+              💾 Guardar en hoja + notificar
+            </button>
+          </div>
+        </div>
+
+        <div class="divider"><span>Link de confirmación para el contacto</span></div>
+
+        <!-- Link público de confirmación -->
+        <div class="link-box">
+          <div class="link-box-title">🔗 Enviar link al contacto para que acepte</div>
+          <div class="link-url" id="link-preview">— Completa fecha y hora primero —</div>
+          <div class="link-actions">
+            <button class="btn btn-link btn-sm" onclick="copiarLink()">📋 Copiar link</button>
+            <button class="btn btn-wa btn-sm" onclick="enviarLinkWA()">💬 Link por WA</button>
+            <button class="btn btn-mail btn-sm" onclick="enviarLinkCorreo()">✉️ Link por correo</button>
+          </div>
+        </div>
+
+      </div><!-- /detalle-body -->
+    </div><!-- /detalle-panel -->
+
+  </div><!-- /layout -->
+
+</div><!-- /main -->
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+'use strict';
+var PROXY    = 'https://script.google.com/macros/s/AKfycbz-_1X-c3aZ2lJ4N6m3R5tP2l2cznIs7Seuvkb5X5J1oPVrIXDwkEHi936b4dXg5JxO/exec';
+var WA_ADMIN = '524425839311';
+
+/* URL base del archivo de confirmación pública (en el mismo repo de GitHub) */
+var CONFIRM_BASE_URL = 'https://bienestaremocionalwepapp-code.github.io/editor-bienestar-emocional-online/confirmacion-cita.html';
+
+var MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+var DIAS  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+var todos    = [];
+var filtrado = [];
+var regActual = null;   /* formulario seleccionado */
+
+/* ══ API ════════════════════════════════════════════ */
+function apiGet(tab){
+  return fetch(PROXY+'?tab='+encodeURIComponent(tab),{redirect:'follow'})
+    .then(function(r){return r.text();})
+    .then(function(t){var j=JSON.parse(t);if(!j.ok)throw new Error(j.error||'Error');return j;});
+}
+function apiPost(action,payload){
+  return fetch(PROXY,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify(Object.assign({action:action},payload))})
+    .then(function(r){return r.text();})
+    .then(function(t){var j=JSON.parse(t);if(!j.ok)throw new Error(j.error||'Error');return j;});
+}
+
+/* ══ Init ═══════════════════════════════════════════ */
+(function(){
+  var hoy=new Date(),d30=new Date();
+  d30.setDate(hoy.getDate()-30);
+  document.getElementById('f-hasta').value=fmtDate(hoy);
+  document.getElementById('f-desde').value=fmtDate(d30);
+  cargar();
+  /* actualizar link en vivo al cambiar fecha/hora */
+  ['ag-fecha','ag-hora-ini','ag-hora-fin'].forEach(function(id){
+    document.getElementById(id).addEventListener('input',actualizarLinkPreview);
+  });
+})();
+
+/* ══ Cargar datos ═══════════════════════════════════ */
+function cargar(){
+  document.getElementById('loading').style.display='';
+  document.getElementById('layout').style.display='none';
+  document.getElementById('stats').style.display='none';
+  cerrarDetalle();
+  apiGet('FormulariosPendientes')
+    .then(function(j){
+      todos=j.formularios||[];
+      document.getElementById('loading').style.display='none';
+      aplicar();
+      toast('✅ '+todos.length+' formularios cargados','ok');
+    })
+    .catch(function(e){
+      document.getElementById('loading').style.display='none';
+      document.getElementById('layout').style.display='';
+      document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="empty-cell">⚠️ Error: '+esc(e.message)+'</td></tr>';
+      toast('Error: '+e.message,'err');
+    });
+}
+
+/* ══ Filtrar ════════════════════════════════════════ */
+function aplicar(){
+  var desde=document.getElementById('f-desde').value;
+  var hasta=document.getElementById('f-hasta').value;
+  var tipo =document.getElementById('f-tipo').value;
+  filtrado=todos.filter(function(f){
+    if(tipo!=='todos'&&f._tipo!==tipo)return false;
+    if((desde||hasta)&&f.timestamp){
+      var d=new Date(f.timestamp);
+      if(desde&&d<new Date(desde+'T00:00:00'))return false;
+      if(hasta&&d>new Date(hasta+'T23:59:59'))return false;
+    }
+    return true;
+  });
+  renderTabla();
+  renderStats();
+}
+
+function limpiar(){
+  var hoy=new Date(),d30=new Date();
+  d30.setDate(hoy.getDate()-30);
+  document.getElementById('f-hasta').value=fmtDate(hoy);
+  document.getElementById('f-desde').value=fmtDate(d30);
+  document.getElementById('f-tipo').value='todos';
+  aplicar();
+}
+
+/* ══ Render tabla ═══════════════════════════════════ */
+function renderTabla(){
+  document.getElementById('layout').style.display='';
+  var tbody=document.getElementById('tbody');
+  var desde=document.getElementById('f-desde').value;
+  var hasta=document.getElementById('f-hasta').value;
+  var tipo =document.getElementById('f-tipo').value;
+  var tipoLabel={todos:'Todos los tipos',cita:'Citas personales',empresa:'Empresas',escuela:'Escuelas'};
+  var sub='';
+  if(desde&&hasta)sub='Del '+fmtHuman(desde)+' al '+fmtHuman(hasta);
+  else if(desde)sub='Desde '+fmtHuman(desde);
+  else if(hasta)sub='Hasta '+fmtHuman(hasta);
+  else sub='Todos los registros';
+  sub+=' · '+(tipoLabel[tipo]||tipo);
+  document.getElementById('sub-txt').textContent=sub;
+  document.getElementById('count-txt').textContent=filtrado.length+' registro'+(filtrado.length!==1?'s':'');
+  document.getElementById('ph-txt').textContent=sub+' · Total: '+filtrado.length+' · Generado: '+new Date().toLocaleString('es-MX');
+  if(!filtrado.length){
+    tbody.innerHTML='<tr><td colspan="10" class="empty-cell">📭 Sin resultados para los filtros aplicados.</td></tr>';
+    return;
+  }
+  var tm={cita:['🟣','t-cita','Cita personal'],empresa:['🔵','t-empresa','Empresa'],escuela:['🟢','t-escuela','Escuela']};
+  var sc={'Pendiente':'s-pendiente','En espera':'s-espera','Atendido':'s-atendido','Cancelado':'s-cancelado'};
+  tbody.innerHTML=filtrado.map(function(f,i){
+    var t=tm[f._tipo]||['📋','t-cita',f._tipo||'—'];
+    var ts='';
+    if(f.timestamp){try{ts=new Date(f.timestamp).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});}catch(e){ts=(f.timestamp||'').substring(0,10);}}
+    var est=f.estado||'Pendiente';
+    var ec=sc[est]||'s-pendiente';
+    var entidad=esc(f.entidad||f.nombre_empresa||f.nombre_escuela||'—');
+    var mot=esc((f.motivo||'').substring(0,80))+(f.motivo&&f.motivo.length>80?'…':'');
+    var rowId='row-'+f._hoja+'-'+f._rowIndex;
+    return '<tr id="'+rowId+'" onclick="seleccionarFila(\''+esc(f._hoja)+'\','+Number(f._rowIndex)+')">'
+      +'<td style="color:var(--mid);font-size:.7rem;">'+(i+1)+'</td>'
+      +'<td style="white-space:nowrap;font-size:.77rem;">'+(ts||'—')+'</td>'
+      +'<td><span class="tbadge '+t[1]+'">'+t[0]+' '+t[2]+'</span></td>'
+      +'<td><strong>'+esc(f.nombre||'—')+'</strong></td>'
+      +'<td style="white-space:nowrap;">'+esc(f.telefono||'—')+'</td>'
+      +'<td style="font-size:.74rem;word-break:break-all;">'+esc(f.correo||'—')+'</td>'
+      +'<td style="font-size:.79rem;">'+entidad+'</td>'
+      +'<td style="font-size:.79rem;">'+esc(f.servicio||'—')+'</td>'
+      +'<td><span class="tbadge '+ec+'">'+esc(est)+'</span></td>'
+      +'<td class="motivo-txt">'+(mot||'—')+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderStats(){
+  document.getElementById('stats').style.display='flex';
+  document.getElementById('s-tot').textContent =filtrado.length;
+  document.getElementById('s-cita').textContent=filtrado.filter(function(f){return f._tipo==='cita';}).length;
+  document.getElementById('s-emp').textContent =filtrado.filter(function(f){return f._tipo==='empresa';}).length;
+  document.getElementById('s-esc').textContent =filtrado.filter(function(f){return f._tipo==='escuela';}).length;
+}
+
+/* ══ Seleccionar fila → panel detalle ═══════════════ */
+function seleccionarFila(hoja, rowIndex){
+  var f=filtrado.find(function(x){return x._hoja===hoja&&Number(x._rowIndex)===Number(rowIndex);});
+  if(!f)return;
+  regActual=f;
+
+  /* marcar fila activa */
+  document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('activa');});
+  var rowEl=document.getElementById('row-'+hoja+'-'+rowIndex);
+  if(rowEl)rowEl.classList.add('activa');
+
+  /* rellenar panel */
+  var tm={cita:['🟣','t-cita','Cita personal'],empresa:['🔵','t-empresa','Empresa'],escuela:['🟢','t-escuela','Escuela']};
+  var t=tm[f._tipo]||['📋','t-cita',f._tipo||'—'];
+
+  document.getElementById('d-title').textContent=t[0]+' '+(f.nombre||'Formulario');
+  document.getElementById('d-nombre').textContent=f.nombre||'—';
+  document.getElementById('d-tel').textContent=f.telefono||'—';
+  document.getElementById('d-correo').textContent=f.correo||'—';
+
+  var eRow=document.getElementById('d-entidad-row');
+  var entidad=f.entidad||f.nombre_empresa||f.nombre_escuela||'';
+  if(entidad){document.getElementById('d-entidad').textContent=entidad;eRow.style.display='';}
+  else eRow.style.display='none';
+
+  document.getElementById('d-tipo-badge').innerHTML='<span class="tbadge '+t[1]+'">'+t[0]+' '+t[2]+'</span>';
+  document.getElementById('d-servicio-txt').textContent=f.servicio?'🏷️ '+f.servicio:'';
+
+  var mw=document.getElementById('d-motivo-wrap');
+  if(f.motivo){document.getElementById('d-motivo').textContent=f.motivo;mw.style.display='';}
+  else mw.style.display='none';
+
+  /* campos extra */
+  var excluir=['_tipo','_hoja','_rowIndex','nombre','telefono','correo','servicio','motivo','entidad','estado','nombre_contacto','nombre_empresa','nombre_escuela','id_contacto','timestamp'];
+  var extras=Object.keys(f).filter(function(k){return excluir.indexOf(k)===-1&&f[k]&&String(f[k]).trim();});
+  var eb=document.getElementById('d-extra-box'), ebtn=document.getElementById('d-extra-btn');
+  if(extras.length){
+    eb.innerHTML=extras.map(function(k){return '<b>'+esc(k.replace(/_/g,' '))+':</b> '+esc(f[k])+'<br>';}).join('');
+    ebtn.style.display='';eb.classList.remove('open');ebtn.textContent='+ Ver todos los campos';
+  } else {eb.innerHTML='';ebtn.style.display='none';}
+
+  /* prerellenar mensaje */
+  var primer=(f.nombre||'').split(' ')[0];
+  document.getElementById('ag-msg').value='Hola '+primer+', hemos recibido tu solicitud de '+(f.servicio||entidad||'servicio')+'. En breve te confirmamos tu cita. ¡Gracias! 💜';
+
+  /* resetear fecha/hora */
+  document.getElementById('ag-fecha').value='';
+  document.getElementById('ag-hora-ini').value='09:00';
+  document.getElementById('ag-hora-fin').value='';
+  document.getElementById('ag-estado').value='En espera';
+  actualizarLinkPreview();
+
+  /* mostrar panel */
+  document.getElementById('detalle-panel').classList.add('show');
+
+  /* scroll al panel en móvil */
+  setTimeout(function(){
+    document.getElementById('detalle-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  },80);
+}
+
+function cerrarDetalle(){
+  document.getElementById('detalle-panel').classList.remove('show');
+  document.querySelectorAll('tbody tr').forEach(function(r){r.classList.remove('activa');});
+  regActual=null;
+}
+
+function toggleExtra(){
+  var eb=document.getElementById('d-extra-box'), ebtn=document.getElementById('d-extra-btn');
+  var o=eb.classList.toggle('open');
+  ebtn.textContent=o?'− Ocultar campos extra':'+ Ver todos los campos';
+}
+
+/* ══ Construir datos de agenda ══════════════════════ */
+function getDatosAgenda(){
+  if(!regActual){toast('Selecciona un formulario primero','warn');return null;}
+  var fecha=document.getElementById('ag-fecha').value;
+  if(!fecha){toast('Selecciona una fecha de cita','warn');return null;}
+  var horaIni=document.getElementById('ag-hora-ini').value||'';
+  var horaFin=document.getElementById('ag-hora-fin').value||'';
+  var msg=document.getElementById('ag-msg').value.trim();
+  var estado=document.getElementById('ag-estado').value;
+  var fd=new Date(fecha+'T12:00:00');
+  var fechaLeg=DIAS[fd.getDay()]+' '+fd.getDate()+' de '+MESES[fd.getMonth()]+' '+fd.getFullYear();
+  var horaLeg=horaIni+(horaFin?' – '+horaFin:'');
+  return {fecha:fecha,horaIni:horaIni,horaFin:horaFin,msg:msg,estado:estado,fechaLeg:fechaLeg,horaLeg:horaLeg};
+}
+
+/* ══ Guardar en hoja ════════════════════════════════ */
+function guardarEnHoja(ag){
+  return apiPost('marcarFormularioAtendido',{
+    tab:       regActual._hoja,
+    rowIndex:  regActual._rowIndex,
+    estado:    ag.estado,
+    fechaCita: ag.fecha,
+    horaCita:  ag.horaIni
+  });
+}
+
+/* ══ Guardar + notificar todo ═══════════════════════ */
+function guardarYNotificar(){
+  var ag=getDatosAgenda();if(!ag)return;
+  var btn=document.getElementById('btn-guardar');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span> Guardando…';
+  guardarEnHoja(ag)
+    .then(function(){
+      toast('✅ Guardado en hoja','ok');
+      /* abrir WA admin */
+      var msgAdmin='📋 *Formulario atendido*\n👤 *Nombre:* '+(regActual.nombre||'—')
+        +'\n📱 *Tel:* '+(regActual.telefono||'—')
+        +'\n🏷️ *Servicio:* '+(regActual.servicio||'—')
+        +'\n📅 *Fecha:* '+ag.fechaLeg
+        +'\n🕐 *Hora:* '+ag.horaLeg
+        +'\n📌 *Estado:* '+ag.estado;
+      window.open('https://wa.me/'+WA_ADMIN+'?text='+encodeURIComponent(msgAdmin),'_blank');
+    })
+    .catch(function(e){toast('Error al guardar: '+e.message,'err');})
+    .finally(function(){btn.disabled=false;btn.innerHTML='💾 Guardar en hoja + notificar';});
+}
+
+/* ══ Enviar correo ══════════════════════════════════ */
+function enviarCorreo(){
+  var ag=getDatosAgenda();if(!ag)return;
+  if(!regActual.correo){toast('Este formulario no tiene correo registrado','warn');return;}
+  var btn=document.getElementById('btn-correo');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+  apiPost('enviarCorreoFormulario',{data:{
+    nombre:     regActual.nombre||'',
+    correo:     regActual.correo||'',
+    servicio:   regActual.servicio||'',
+    fecha:      ag.fechaLeg,
+    hora_inicio:ag.horaIni,
+    hora_fin:   ag.horaFin,
+    motivo:     regActual.motivo||'',
+    mensaje_extra: ag.msg,
+    link_confirmacion: generarURL(ag)
+  }})
+  .then(function(){toast('✉️ Correo enviado','ok');})
+  .catch(function(e){toast('Error correo: '+e.message,'err');})
+  .finally(function(){btn.disabled=false;btn.innerHTML='✉️ Correo';});
+}
+
+/* ══ Enviar WhatsApp al contacto ════════════════════ */
+function enviarWA(){
+  var ag=getDatosAgenda();if(!ag)return;
+  if(!regActual.telefono){toast('No hay teléfono registrado','warn');return;}
+  var tel=regActual.telefono.replace(/\D/g,'');
+  if(tel.length===10)tel='52'+tel;
+  var primer=(regActual.nombre||'').split(' ')[0];
+  var url=generarURL(ag);
+  var msg='¡Hola '+primer+'! 💜\n\n'
+    +'Recibimos tu solicitud de *'+(regActual.servicio||regActual.entidad||'servicio')+'*.\n\n'
+    +'📅 *Fecha tentativa:* '+ag.fechaLeg+'\n'
+    +'🕐 *Horario:* '+ag.horaLeg+'\n\n'
+    +(ag.msg?ag.msg+'\n\n':'')
+    +'Para *confirmar o reagendar* tu cita haz clic aquí:\n'+url+'\n\n'
+    +'¡Te esperamos! 🌿';
+  window.open('https://wa.me/'+tel+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+/* ══ Enviar SMS ═════════════════════════════════════ */
+function enviarSMS(){
+  var ag=getDatosAgenda();if(!ag)return;
+  if(!regActual.telefono){toast('No hay teléfono registrado','warn');return;}
+  var tel=regActual.telefono.replace(/\D/g,'');
+  var url=generarURL(ag);
+  var primer=(regActual.nombre||'').split(' ')[0];
+  var msg='Hola '+primer+', tu cita en Bienestar Emocional: '
+    +ag.fechaLeg+' '+ag.horaLeg
+    +'. Confirma aqui: '+url;
+  /* sms: URI — funciona en móviles */
+  window.open('sms:'+tel+'?body='+encodeURIComponent(msg));
+}
+
+/* ══ Link de confirmación ═══════════════════════════ */
+function generarURL(ag){
+  if(!regActual||!ag||!ag.fecha)return '';
+  var params=new URLSearchParams({
+    nombre:  regActual.nombre||'',
+    tel:     regActual.telefono||'',
+    correo:  regActual.correo||'',
+    servicio:regActual.servicio||'',
+    fecha:   ag.fecha,
+    hora:    ag.horaIni,
+    horaFin: ag.horaFin||'',
+    hoja:    regActual._hoja||'',
+    row:     String(regActual._rowIndex||'')
+  });
+  return CONFIRM_BASE_URL+'?'+params.toString();
+}
+
+function actualizarLinkPreview(){
+  var ag=getDatosAgendaSilencioso();
+  var el=document.getElementById('link-preview');
+  if(!ag||!ag.fecha){
+    el.textContent='— Completa fecha y hora primero —';
+    return;
+  }
+  el.textContent=generarURL(ag);
+}
+
+function getDatosAgendaSilencioso(){
+  if(!regActual)return null;
+  var fecha=document.getElementById('ag-fecha').value;
+  if(!fecha)return null;
+  return{
+    fecha:fecha,
+    horaIni:document.getElementById('ag-hora-ini').value||'',
+    horaFin:document.getElementById('ag-hora-fin').value||''
+  };
+}
+
+function copiarLink(){
+  var ag=getDatosAgendaSilencioso();
+  if(!ag||!ag.fecha){toast('Completa la fecha primero','warn');return;}
+  var url=generarURL(ag);
+  navigator.clipboard.writeText(url)
+    .then(function(){toast('📋 Link copiado al portapapeles','ok');})
+    .catch(function(){
+      /* fallback */
+      var t=document.createElement('textarea');
+      t.value=url;document.body.appendChild(t);t.select();
+      document.execCommand('copy');document.body.removeChild(t);
+      toast('📋 Link copiado','ok');
+    });
+}
+
+function enviarLinkWA(){
+  var ag=getDatosAgendaSilencioso();
+  if(!ag||!ag.fecha){toast('Completa la fecha primero','warn');return;}
+  if(!regActual.telefono){toast('No hay teléfono','warn');return;}
+  var tel=regActual.telefono.replace(/\D/g,'');
+  if(tel.length===10)tel='52'+tel;
+  var url=generarURL(ag);
+  var primer=(regActual.nombre||'').split(' ')[0];
+  var msg='Hola '+primer+' 💜, aquí está el link para confirmar o reagendar tu cita:\n'+url;
+  window.open('https://wa.me/'+tel+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function enviarLinkCorreo(){
+  var ag=getDatosAgendaSilencioso();
+  if(!ag||!ag.fecha){toast('Completa la fecha primero','warn');return;}
+  if(!regActual.correo){toast('No hay correo registrado','warn');return;}
+  var url=generarURL(ag);
+  var primer=(regActual.nombre||'').split(' ')[0];
+  var subject=encodeURIComponent('Confirma tu cita — Bienestar Emocional');
+  var body=encodeURIComponent('Hola '+primer+',\n\nHaz clic en el siguiente link para confirmar o reagendar tu cita:\n'+url+'\n\n¡Gracias!');
+  window.open('mailto:'+regActual.correo+'?subject='+subject+'&body='+body);
+}
+
+/* ══ PDF ════════════════════════════════════════════ */
+function imprimirPDF(){
+  if(!filtrado.length){toast('Sin datos para exportar','warn');return;}
+  window.print();
+}
+
+/* ══ Utils ══════════════════════════════════════════ */
+function fmtDate(d){return d.toISOString().substring(0,10);}
+function fmtHuman(s){
+  if(!s)return'';
+  try{return new Date(s+'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});}
+  catch(e){return s;}
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function toast(msg,type){
+  var c=document.getElementById('toasts'),t=document.createElement('div');
+  t.className='toast';
+  t.style.borderLeft='3px solid '+(type==='ok'?'var(--ok)':type==='err'?'var(--err)':'var(--warn)');
+  t.textContent=msg;c.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(40px)';t.style.transition='.3s';setTimeout(function(){t.remove();},350);},3500);
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarDetalle();});
+</script>
+</body>
+</html>

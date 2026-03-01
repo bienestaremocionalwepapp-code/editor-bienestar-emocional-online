@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Léeme — Sistema Bienestar Emocional · Familia Martínez Pacheco</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rosa:#FF85C0; --morado:#A67FFF; --rosa-c:#FFE5F0; --morado-c:#E8D5FF;
+  --grad:linear-gradient(135deg,#FF85C0,#A67FFF);
+  --bg:#0a0814; --bg2:#110e1f; --surface:#1a1730; --surface2:#201d38;
+  --border:rgba(255,255,255,.08); --border2:rgba(166,127,255,.2);
+  --text:#f0ecff; --text2:#9b94c4; --text3:#4a4468;
+  --ok:#34d399; --warn:#fbbf24; --err:#f87171;
+  --mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--morado);border-radius:5px;opacity:.5;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── FONDO ANIMADO ── */
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(166,127,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(166,127,255,.03) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.orb1{width:800px;height:800px;background:rgba(166,127,255,.08);top:-300px;left:-200px;animation:orbF 14s ease-in-out infinite alternate;}
+.orb2{width:600px;height:600px;background:rgba(255,133,192,.06);bottom:-200px;right:-150px;animation:orbF 18s ease-in-out infinite alternate-reverse;}
+@keyframes orbF{to{transform:translate(80px,100px);}}
+
+/* ── PORTADA ── */
+.cover{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;}
+.cover-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem 1.1rem;border-radius:50px;border:1px solid var(--border2);background:rgba(166,127,255,.1);font-size:.72rem;font-weight:600;color:var(--morado);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem;animation:fadeDown .8s ease both;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:none;}}
+.cover-icon{width:90px;height:90px;border-radius:24px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 1.8rem;box-shadow:0 0 60px rgba(166,127,255,.4);animation:iconPulse 3s ease-in-out infinite,fadeUp .9s ease both .2s;opacity:0;}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 40px rgba(166,127,255,.35);}50%{box-shadow:0 0 80px rgba(166,127,255,.6),0 0 120px rgba(255,133,192,.2);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+.cover-title{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;margin-bottom:.8rem;animation:fadeUp .9s ease both .35s;opacity:0;}
+.cover-title span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cover-sub{font-size:1.05rem;color:var(--text2);max-width:520px;line-height:1.7;margin-bottom:2.4rem;animation:fadeUp .9s ease both .5s;opacity:0;}
+.cover-family{font-family:'Playfair Display',serif;font-style:italic;font-size:1.25rem;color:var(--rosa);margin-bottom:3rem;animation:fadeUp .9s ease both .65s;opacity:0;}
+.cover-scroll{animation:fadeUp .9s ease both .8s,bounce 2s ease-in-out 2s infinite;opacity:0;color:var(--text3);font-size:.78rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+.cover-scroll span{font-size:1.2rem;}
+
+/* ── CONTENEDOR PRINCIPAL ── */
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 1.5rem 6rem;}
+
+/* ── SECCIONES ── */
+.section{margin-bottom:4rem;opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease;}
+.section.visible{opacity:1;transform:none;}
+
+/* ── TÍTULOS DE SECCIÓN ── */
+.sec-label{display:inline-flex;align-items:center;gap:.4rem;font-size:.65rem;font-weight:700;color:var(--morado);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.75rem;padding:.25rem .75rem;border-radius:50px;background:rgba(166,127,255,.1);border:1px solid rgba(166,127,255,.2);}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.2;}
+.sec-desc{font-size:.93rem;color:var(--text2);line-height:1.7;margin-bottom:1.8rem;max-width:600px;}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.04) inset;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4),0 0 0 1px rgba(166,127,255,.15) inset;}
+.card-head{padding:1rem 1.4rem;background:linear-gradient(135deg,rgba(166,127,255,.1),rgba(255,133,192,.06));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;}
+.card-head-ico{font-size:1.3rem;flex-shrink:0;}
+.card-head-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);}
+.card-head-sub{font-size:.75rem;color:var(--text3);margin-top:.1rem;}
+.card-body{padding:1.3rem 1.4rem;}
+
+/* ── CREDENCIALES ── */
+.cred-row{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;border-radius:11px;border:1px solid var(--border);background:var(--surface2);margin-bottom:.6rem;transition:border-color .2s;}
+.cred-row:hover{border-color:var(--border2);}
+.cred-ico{font-size:1.1rem;flex-shrink:0;width:2rem;text-align:center;}
+.cred-label{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.18rem;}
+.cred-val{font-family:var(--mono);font-size:.9rem;color:var(--text);font-weight:500;}
+.cred-val.secret{color:var(--warn);letter-spacing:.08em;}
+.cred-val.blank{color:var(--text3);font-style:italic;font-size:.82rem;}
+.cred-copy{margin-left:auto;padding:.3rem .7rem;border-radius:7px;border:1px solid var(--border2);background:none;color:var(--morado);font-size:.72rem;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .18s;flex-shrink:0;}
+.cred-copy:hover{background:rgba(166,127,255,.15);border-color:var(--morado);}
+
+/* ── PASOS ANIMADOS ── */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:1.2rem;padding:1.2rem 0;border-bottom:1px solid var(--border);position:relative;}
+.step:last-child{border-bottom:none;}
+.step-num{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 14px rgba(166,127,255,.35);position:relative;z-index:1;}
+.step-line{position:absolute;left:17px;top:52px;bottom:-1px;width:2px;background:linear-gradient(to bottom,rgba(166,127,255,.3),transparent);z-index:0;}
+.step:last-child .step-line{display:none;}
+.step-content{flex:1;padding-top:.2rem;}
+.step-title{font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:.3rem;}
+.step-desc{font-size:.85rem;color:var(--text2);line-height:1.65;}
+.step-tag{display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .55rem;border-radius:50px;font-size:.68rem;font-weight:700;margin-top:.45rem;}
+.tag-ok{background:rgba(52,211,153,.12);color:var(--ok);border:1px solid rgba(52,211,153,.25);}
+.tag-warn{background:rgba(251,191,36,.1);color:var(--warn);border:1px solid rgba(251,191,36,.25);}
+.tag-info{background:rgba(166,127,255,.12);color:var(--morado);border:1px solid rgba(166,127,255,.25);}
+
+/* ── MAPA DEL SISTEMA ── */
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.85rem;}
+.sys-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;transition:all .2s;cursor:default;}
+.sys-card:hover{border-color:var(--border2);background:rgba(166,127,255,.08);}
+.sys-card-ico{font-size:1.6rem;margin-bottom:.6rem;}
+.sys-card-title{font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:.3rem;}
+.sys-card-desc{font-size:.78rem;color:var(--text2);line-height:1.6;}
+
+/* ── ALERTA IMPORTANTE ── */
+.alert{border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:1rem;display:flex;gap:.85rem;align-items:flex-start;}
+.alert-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);}
+.alert-ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);}
+.alert-info{background:rgba(166,127,255,.08);border:1px solid rgba(166,127,255,.2);}
+.alert-ico{font-size:1.2rem;flex-shrink:0;margin-top:.05rem;}
+.alert-text{font-size:.85rem;color:var(--text2);line-height:1.68;}
+.alert-text b{color:var(--text);font-weight:600;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--border);color:var(--text3);font-size:.8rem;line-height:1.8;}
+.footer-heart{font-size:1.5rem;display:block;margin-bottom:.5rem;animation:heartBeat 2s ease-in-out infinite;}
+@keyframes heartBeat{0%,100%{transform:scale(1);}14%{transform:scale(1.2);}28%{transform:scale(1);}42%{transform:scale(1.15);}70%{transform:scale(1);}}
+
+/* ── DIVIDER ── */
+.div{display:flex;align-items:center;gap:.8rem;margin:2rem 0 1.5rem;}
+.div::before,.div::after{content:'';flex:1;height:1px;background:var(--border);}
+.div span{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap;}
+
+/* ── TOAST ANIMADO ── */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--surface2);color:var(--text);padding:.7rem 1.2rem;border-radius:11px;font-size:.83rem;font-weight:600;border-left:3px solid var(--ok);box-shadow:0 8px 28px rgba(0,0,0,.5);display:none;align-items:center;gap:.5rem;}
+#toast.show{display:flex;animation:toastIn .28s ease;}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:none;}}
+
+/* ── IMPRESIÓN ── */
+@media print{
+  .bg-grid,.orb{display:none;}
+  body{background:#fff;color:#000;}
+  .cover{min-height:auto;padding:2rem 0;}
+  .section{opacity:1!important;transform:none!important;}
+  .card,.sys-card,.cred-row,.alert{border:1px solid #ddd!important;background:#fafafa!important;}
+  .cover-title,.sec-title{color:#2D2A3D!important;}
+  .cover-title span,.sec-label{background:none!important;-webkit-text-fill-color:#A67FFF!important;color:#A67FFF!important;}
+  .cred-copy{display:none;}
+}
+
+@media(max-width:600px){
+  .sys-grid{grid-template-columns:1fr;}
+  .cover-title{font-size:2rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- ══ PORTADA ══ -->
+<div class="cover">
+  <div class="cover-badge">📋 Documento de herencia digital</div>
+  <div class="cover-icon">💜</div>
+  <h1 class="cover-title">Sistema <span>Bienestar Emocional</span><br>Guía completa</h1>
+  <p class="cover-sub">Todo lo que necesitas saber para operar, mantener y continuar este sistema. Creado con amor para quienes vienen después.</p>
+  <div class="cover-family">Para la Familia Martínez Pacheco y descendencia</div>
+  <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.6rem;border-radius:50px;background:var(--grad);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(166,127,255,.45);transition:all .22s;margin-bottom:2rem;animation:fadeUp .9s ease both .75s;opacity:0;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(166,127,255,.6)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(166,127,255,.45)'">🖨️ Imprimir / Guardar como PDF</button>
+  <div class="cover-scroll">
+    <span>↓</span>
+    Desplázate para leer
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══ SECCIÓN 1 — ¿QUÉ ES ESTE SISTEMA? ══ -->
+  <div class="section" id="s1">
+    <div class="sec-label">01 · Introducción</div>
+    <h2 class="sec-title">¿Qué es este sistema?</h2>
+    <p class="sec-desc">Un conjunto de herramientas digitales construidas para gestionar el consultorio de Bienestar Emocional. Todo funciona en la nube, sin servidores propios ni pagos mensuales.</p>
+
+    <div class="sys-grid">
+      <div class="sys-card">
+        <div class="sys-card-ico">🌐</div>
+        <div class="sys-card-title">Sitio web público</div>
+        <div class="sys-card-desc">La página que ven los pacientes. Alojada en GitHub Pages, completamente gratuita.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">✏️</div>
+        <div class="sys-card-title">Editor de contenido</div>
+        <div class="sys-card-desc">Panel privado para modificar textos, imágenes, colores y configuración del sitio.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📊</div>
+        <div class="sys-card-title">Google Sheets</div>
+        <div class="sys-card-desc">Base de datos del sistema. Guarda usuarios, configuración, pendientes y disponibilidad.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">⚙️</div>
+        <div class="sys-card-title">Google Apps Script</div>
+        <div class="sys-card-desc">El cerebro que conecta el sitio con los datos. Se ejecuta automáticamente, sin intervención.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📅</div>
+        <div class="sys-card-title">Agenda</div>
+        <div class="sys-card-desc">Gestión de citas y disponibilidad. Envía notificaciones por WhatsApp y correo.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📋</div>
+        <div class="sys-card-title">Formularios</div>
+        <div class="sys-card-desc">Recibe y gestiona solicitudes de contacto de empresas, escuelas y pacientes.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 2 — ACCESOS ══ -->
+  <div class="section" id="s2">
+    <div class="sec-label">02 · Accesos</div>
+    <h2 class="sec-title">Credenciales del sistema</h2>
+    <p class="sec-desc">Guarda esta información en un lugar seguro. Sin estos datos no es posible administrar el sistema.</p>
+
+    <div class="alert alert-warn">
+      <div class="alert-ico">⚠️</div>
+      <div class="alert-text"><b>Importante:</b> Las contraseñas aparecen en blanco por seguridad. Escríbelas a mano en este documento impreso y guárdalo bajo llave.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-ico">📧</div>
+        <div>
+          <div class="card-head-title">Cuenta Google principal</div>
+          <div class="card-head-sub">Controla el Sheet, Apps Script y Drive</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="cred-row">
+          <div class="cred-ico">📧</div>
+          <div><div class="cred-label">Correo</div><div class="cred-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b4d6ddd1dad1c7c0d5c6d1d9dbd7dddbdad5d8c3d1d6d5c4c4f4d3d9d5ddd89ad7dbd9">[email&#160;protected]</a></div></div>
+          <button class="cred-copy" onclick="copiar('bienestaremocionalwebapp@gmail.com')">Copiar</button>
+        </div>
+        <div class="cred-row">
+          <div class="cred-ico">🔑</div>
+          <div><div class="cred-label">Contraseña Google</div><div class="cred-val blank">[ escribe aquí a mano ]</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-ico">✏️</div>
+        <div>
+          <div class="card-head-title">Editor de contenido</div>
+          <div class="card-head-sub">Usuario administrador del panel</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="cred-row">
+          <div class="cred-ico">👤</div>
+          <div><div class="cred-label">Usuario</div><div class="cred-val">admin</div></div>
+          <button class="cred-copy" onclick="copiar('admin')">Copiar</button>
+        </div>
+        <div class="cred-row">
+          <div class="cred-ico">🔑</div>
+          <div><div class="cred-label">Contraseña editor</div><div class="cred-val blank">[ escribe aquí a mano ]</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-ico">🔗</div>
+        <div>
+          <div class="card-head-title">URLs importantes</div>
+          <div class="card-head-sub">Direcciones web del sistema</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="cred-row">
+          <div class="cred-ico">🌐</div>
+          <div><div class="cred-label">Sitio web público</div><div class="cred-val" style="font-size:.78rem;word-break:break-all;">https://bienestaremocionalwepapp-code.github.io/Bienestar-Emocional-Online/</div></div>
+          <button class="cred-copy" onclick="copiar('https://bienestaremocionalwepapp-code.github.io/Bienestar-Emocional-Online/')">Copiar</button>
+        </div>
+        <div class="cred-row">
+          <div class="cred-ico">✏️</div>
+          <div><div class="cred-label">Editor de contenido</div><div class="cred-val" style="font-size:.78rem;word-break:break-all;">https://github.com/bienestaremocionalwepapp-code/editor-bienestar-emocional-online/blob/main/index.html</div></div>
+          <button class="cred-copy" onclick="copiar('https://github.com/bienestaremocionalwepapp-code/editor-bienestar-emocional-online/blob/main/index.html')">Copiar</button>
+        </div>
+        <div class="cred-row">
+          <div class="cred-ico">📊</div>
+          <div><div class="cred-label">Google Sheet (base de datos)</div><div class="cred-val" style="font-size:.78rem;word-break:break-all;">docs.google.com/spreadsheets/d/1ovxppIPcKGf0KC7SQd0HQcuUfS4PU7lljr4DUH559Mo</div></div>
+          <button class="cred-copy" onclick="copiar('https://docs.google.com/spreadsheets/d/1ovxppIPcKGf0KC7SQd0HQcuUfS4PU7lljr4DUH559Mo')">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 3 — CÓMO USAR EL EDITOR ══ -->
+  <div class="section" id="s3">
+    <div class="sec-label">03 · Uso diario</div>
+    <h2 class="sec-title">Cómo usar el editor</h2>
+    <p class="sec-desc">Paso a paso para las tareas más comunes del día a día.</p>
+
+    <div class="div"><span>Iniciar sesión</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Abre el editor</div>
+              <div class="step-desc">Ve a la URL del editor y espera que cargue la pantalla de login con el logo del consultorio.</div>
+              <span class="step-tag tag-info">🌐 Desde cualquier navegador</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Ingresa usuario y contraseña</div>
+              <div class="step-desc">Escribe <b>admin</b> en usuario y la contraseña del editor. Presiona <b>Entrar</b> o la tecla Enter.</div>
+              <span class="step-tag tag-warn">⚠️ Máximo 5 intentos fallidos</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Selecciona qué hacer</div>
+              <div class="step-desc">Aparece un menú con 4 opciones: Editor de contenido, Consulta Agenda, Reportes y Formularios.</div>
+              <span class="step-tag tag-ok">✅ Elige según la tarea</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="div"><span>Modificar contenido del sitio</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Entra al Editor de contenido</div>
+              <div class="step-desc">En el menú principal selecciona "Editor de contenido". Verás el panel con el menú lateral izquierdo.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Elige la sección a editar</div>
+              <div class="step-desc">En el menú lateral encuentra: Configuración, Contacto, Mapa, Servicios (Empresas, Escuelas, etc.), Colores y Visibilidad.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Edita y guarda</div>
+              <div class="step-desc">Modifica los campos que necesites y presiona el botón <b>💾 Guardar cambios</b>. Aparecerá una notificación verde confirmando.</div>
+              <span class="step-tag tag-ok">✅ Los cambios se aplican inmediatamente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="div"><span>Gestionar usuarios</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Ve a la sección Usuarios</div>
+              <div class="step-desc">En el menú lateral busca <b>👥 Usuarios</b> (solo visible con rol Administrador).</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Crea o edita usuarios</div>
+              <div class="step-desc">Presiona <b>+ Nuevo usuario</b> o el botón <b>Editar</b> junto a un usuario existente. Puedes cambiar nombre, contraseña y rol.</div>
+              <span class="step-tag tag-info">ℹ️ Roles: Administrador, Editor, Visor</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Guarda el usuario</div>
+              <div class="step-desc">Presiona <b>💾 Guardar usuario</b>. Si solo cambias nombre o rol, deja la contraseña vacía — se conserva la anterior.</div>
+              <span class="step-tag tag-ok">✅ Cambios inmediatos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 4 — ESTRUCTURA GOOGLE SHEETS ══ -->
+  <div class="section" id="s4">
+    <div class="sec-label">04 · Base de datos</div>
+    <h2 class="sec-title">Hojas de Google Sheets</h2>
+    <p class="sec-desc">El sistema usa estas pestañas dentro del Google Sheet. Nunca borres ni renombres estas hojas.</p>
+
+    <div class="sys-grid">
+      <div class="sys-card">
+        <div class="sys-card-ico">👥</div>
+        <div class="sys-card-title">Usuarios</div>
+        <div class="sys-card-desc">Contraseñas y roles de acceso al editor. Modificar solo desde el panel.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">⚙️</div>
+        <div class="sys-card-title">Config</div>
+        <div class="sys-card-desc">Título, logo, textos principales, colores y visibilidad del sitio.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📞</div>
+        <div class="sys-card-title">Contacto</div>
+        <div class="sys-card-desc">Teléfono, correo, horario y redes sociales.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📍</div>
+        <div class="sys-card-title">Mapa</div>
+        <div class="sys-card-desc">Coordenadas y configuración del mapa de ubicación.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📋</div>
+        <div class="sys-card-title">Pendientes</div>
+        <div class="sys-card-desc">Solicitudes de cita recibidas con su estado actual.</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-ico">📅</div>
+        <div class="sys-card-title">Disponibilidad</div>
+        <div class="sys-card-desc">Horarios disponibles para agendar citas.</div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:1rem;">
+      <div class="alert-ico">⚠️</div>
+      <div class="alert-text"><b>Nunca edites directamente el Google Sheet</b> para datos del sistema. Siempre usa el panel editor. Editar la hoja manualmente puede romper el sistema.</div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 5 — MANTENIMIENTO ══ -->
+  <div class="section" id="s5">
+    <div class="sec-label">05 · Mantenimiento</div>
+    <h2 class="sec-title">Tareas de mantenimiento</h2>
+    <p class="sec-desc">Acciones simples que garantizan el buen funcionamiento del sistema a largo plazo.</p>
+
+    <div class="alert alert-ok">
+      <div class="alert-ico">✅</div>
+      <div class="alert-text"><b>Buena noticia:</b> Este sistema está diseñado para funcionar solo. No requiere actualizaciones, renovaciones ni pagos. Google Sheets y GitHub Pages son gratuitos para siempre.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Revisar pendientes regularmente</div>
+              <div class="step-desc">Entra al editor y revisa la sección <b>📋 Pendientes</b> al menos una vez por día para atender solicitudes nuevas.</div>
+              <span class="step-tag tag-warn">📅 Diario recomendado</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Actualizar disponibilidad</div>
+              <div class="step-desc">Agrega y quita horarios disponibles desde la sección <b>📅 Agenda</b> para que los pacientes siempre vean fechas actuales.</div>
+              <span class="step-tag tag-info">📅 Semanal recomendado</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Cambiar contraseñas periódicamente</div>
+              <div class="step-desc">Desde <b>👥 Usuarios</b> puedes cambiar contraseñas cuando sea necesario. Mínimo cada 6 meses por seguridad.</div>
+              <span class="step-tag tag-warn">🔒 Cada 6 meses</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">Verificar correo de Google</div>
+              <div class="step-desc">El sistema envía correos automáticos. Asegúrate que la cuenta <b><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0a2a9a5aea5b3b4a1b2a5adafa3a9afaea1acb7a5a2a1b0b080a7ada1a9aceea3afad">[email&#160;protected]</a></b> esté activa y no bloqueada.</div>
+              <span class="step-tag tag-info">📧 Mensual recomendado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 6 — SOPORTE ══ -->
+  <div class="section" id="s6">
+    <div class="sec-label">06 · Soporte</div>
+    <h2 class="sec-title">¿Necesitas ayuda?</h2>
+    <p class="sec-desc">Si algo no funciona o necesitas hacer cambios más avanzados al sistema.</p>
+
+    <div class="alert alert-info">
+      <div class="alert-ico">💡</div>
+      <div class="alert-text"><b>Claude AI (claude.ai)</b> fue el asistente utilizado para construir este sistema. Puedes acudir a él con preguntas técnicas, mostrarle el código y pedirle ayuda. Es gratuito y está disponible en <b>claude.ai</b></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-ico">🆘</div>
+        <div>
+          <div class="card-head-title">Problemas comunes y soluciones</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">?</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">El sitio no muestra los cambios</div>
+              <div class="step-desc">Espera 1-2 minutos y recarga la página con Ctrl+F5. Los cambios en Google Sheets pueden tardar unos segundos en propagarse.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">?</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">No puedo iniciar sesión en el editor</div>
+              <div class="step-desc">Verifica que el usuario sea <b>admin</b> (minúsculas). Si olvidaste la contraseña, entra al Google Sheet, busca la hoja <b>Usuarios</b> y actualiza el campo <b>pass_1</b>.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">?</div><div class="step-line"></div>
+            <div class="step-content">
+              <div class="step-title">No llegan correos automáticos</div>
+              <div class="step-desc">Entra a la cuenta de Google, abre Apps Script (<b>script.google.com</b>), busca el proyecto del sistema y verifica que los permisos estén autorizados.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MENSAJE FINAL ══ -->
+  <div class="section" id="s7">
+    <div class="card" style="border-color:rgba(255,133,192,.2);background:linear-gradient(135deg,rgba(255,133,192,.06),rgba(166,127,255,.08));">
+      <div class="card-body" style="text-align:center;padding:2.5rem 1.5rem;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">💜</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:.85rem;line-height:1.3;">Este sistema fue construido con dedicación<br>para perdurar en el tiempo</div>
+        <div style="font-size:.9rem;color:var(--text2);line-height:1.8;max-width:480px;margin:0 auto;">Cada línea de código, cada pantalla y cada función fue pensada para que este consultorio pudiera seguir ayudando a las personas que más lo necesitan, sin importar quién esté al frente.</div>
+        <div style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rosa);margin-top:1.4rem;font-size:1.05rem;">— Con amor, para la Familia Martínez Pacheco</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="footer">
+  <span class="footer-heart">💜</span>
+  Sistema Bienestar Emocional · Documento de herencia digital<br>
+  Familia Martínez Pacheco y descendencia<br>
+  <span style="font-size:.72rem;color:var(--text3);margin-top:.3rem;display:block;">Construido con Claude AI · claude.ai</span>
+</div>
+
+<div id="toast">✅ Copiado al portapapeles</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Scroll reveal ──
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:.12});
+document.querySelectorAll('.section').forEach(function(s){observer.observe(s);});
+
+// ── Copiar al portapapeles ──
+function copiar(texto){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(texto).then(function(){showToast();});
+  }else{
+    var t=document.createElement('textarea');
+    t.value=texto;document.body.appendChild(t);t.select();
+    document.execCommand('copy');document.body.removeChild(t);
+    showToast();
+  }
+}
+function showToast(){
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+// ── Animación escalonada de sys-cards ──
+document.querySelectorAll('.sys-card').forEach(function(c,i){
+  c.style.opacity='0';c.style.transform='translateY(20px)';
+  c.style.transition='opacit

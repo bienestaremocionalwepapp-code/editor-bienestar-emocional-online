@@ -981,14 +981,21 @@ function mapCerrarSV(){document.getElementById('map-sv-panel').style.display='no
 function mapActualizarSV(lat,lng){var panel=document.getElementById('map-sv-panel');if(panel.style.display==='none')return;document.getElementById('map-sv-iframe').src='https://www.google.com/maps/embed/v1/streetview?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&location='+lat+','+lng+'&heading=0&pitch=0&fov=90';}
 function mapUsarGPS(){if(!navigator.geolocation){toast('Tu navegador no soporta geolocalización','err');return;}navigator.geolocation.getCurrentPosition(function(pos){var lat=pos.coords.latitude,lng=pos.coords.longitude;if(_beMap&&_beMarker){_beMap.setView([lat,lng],16);_beMarker.setLatLng([lat,lng]);}else initBeMap(lat,lng);mapGuardarCoords(lat,lng);mapReverseGeocode(lat,lng);},function(){toast('No se pudo obtener tu posición','err');},{enableHighAccuracy:true,timeout:8000});}
 
-function fillMapa(d){
-  sv('map-latitud',d.latitud);sv('map-longitud',d.longitud);
-  sv('map-embed_url',d.embed_url||'');sv('map-boton_texto',d.boton_texto);
+// aqui va funcion
+  function fillMapa(d){
+  sv('map-latitud',d.latitud||'20.588100');
+  sv('map-longitud',d.longitud||'-100.388900');
+  sv('map-embed_url',d.embed_url||'');
+  sv('map-boton_texto',d.boton_texto);
   sv('map-link_directo',d.link_directo||'');
-  var lat=parseFloat(d.latitud),lng=parseFloat(d.longitud);
+  var lat=parseFloat(d.latitud)||20.5881;
+  var lng=parseFloat(d.longitud)||-100.3889;
   function intentar(n){
-    if(typeof L!=='undefined'){initBeMap(!isNaN(lat)?lat:20.5881,!isNaN(lng)?lng:-100.3889);}
-    else if(n<30){setTimeout(function(){intentar(n+1);},150);}
+    if(typeof L!=='undefined'){
+      initBeMap(lat, lng);
+    } else if(n<30){
+      setTimeout(function(){intentar(n+1);},150);
+    }
   }
   intentar(0);
 }

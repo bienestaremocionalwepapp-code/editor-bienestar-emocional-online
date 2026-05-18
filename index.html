@@ -950,7 +950,15 @@ function initBeMap(lat,lng){
                         mapReverseGeocode(p.lat,p.lng);
                               mapActualizarSV(p.lat,p.lng);});
   _beMap.on('click',function(e){_beMarker.setLatLng(e.latlng);mapGuardarCoords(e.latlng.lat,e.latlng.lng);mapReverseGeocode(e.latlng.lat,e.latlng.lng);mapActualizarSV(e.latlng.lat,e.latlng.lng);});
-  if(lat)mapGuardarCoords(lat,lng);
+   if(lat) mapGuardarCoords(lat,lng);
+  
+  // Forzar que el mapa se redibuje correctamente
+  setTimeout(function(){ 
+    if(_beMap) _beMap.invalidateSize(); 
+  }, 500);
+  setTimeout(function(){ 
+    if(_beMap) _beMap.invalidateSize(); 
+  }, 1000);
 }
 function mapSetLayer(type){_beCurrentLayer=type;[['osm','mbtn-osm'],['satellite','mbtn-sat'],['topo','mbtn-topo']].forEach(function(pair){var btn=document.getElementById(pair[1]);if(!btn)return;btn.className='btn btn-sm '+(pair[0]===type?'btn-primary':'btn-ghost');});if(_beMap){if(_beLayerObj)_beMap.removeLayer(_beLayerObj);_beLayerObj=_beLayers[type]().addTo(_beMap);}}
 function mapGuardarCoords(lat,lng){sv('map-latitud',lat.toFixed(6));sv('map-longitud',lng.toFixed(6));sv('map-embed_url','https://maps.google.com/maps?q='+lat.toFixed(6)+','+lng.toFixed(6)+'&z=17&output=embed');sv('map-link_directo','https://www.google.com/maps?q='+lat.toFixed(6)+','+lng.toFixed(6));}
